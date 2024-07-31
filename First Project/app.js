@@ -2,8 +2,9 @@ import express from "express";
 const app = express()
 import tasks from "./routes/task.js"
 import connectDB from "./db/connect.js";
-
-const port = 3000;
+import ErrorHandler from "./Middleware/ErrorHandler.js"
+import NotFound from "./Middleware/NotFound.js"
+const port = process.env.PORT || 3000;
 
 // middleware
 
@@ -15,6 +16,12 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/v1/tasks',tasks);
+
+
+// middleware
+app.use(NotFound)
+app.use(ErrorHandler)
+
 const start =async () =>
 {
   try {
