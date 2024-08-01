@@ -4,8 +4,9 @@ import tasks from "./routes/task.js"
 import connectDB from "./db/connect.js";
 import ErrorHandler from "./Middleware/ErrorHandler.js"
 import NotFound from "./Middleware/NotFound.js"
+import dotenv from "dotenv"; 
 const port = process.env.PORT || 3000;
-
+dotenv.config()
 // middleware
 
 

@@ -1,5 +1,6 @@
  import Task from "../Models/TaskModel.js"
  import asyncwrapper from "../Middleware/AsyncWrapper.js"
+ import { createCustomError } from "../Errors/CustomErrors.js"
  
  const getAllTasks = asyncwrapper( async (req,res) =>
 {
@@ -15,14 +16,13 @@
     res.status(201).json({task})
     
 })
- const singleTasks =asyncwrapper(async (req,res) => {
+ const singleTasks =asyncwrapper(async (req,res, next) => {
    
         const {id:taskID} = req.params;
         const task = await Task.findOne({_id:taskID})
         if(!task)
-        {
-            return res.status(404).json({msg:`No Task with id: ${taskID}`})
-        }
+        {return next(createCustomError(`No Task with id: ${taskID}`,404))
+           }
         res.status(200).json({task})
     
 })
@@ -32,7 +32,7 @@ const deleteTasks =asyncwrapper( async (req,res) => {
      const task = await Task.findOneAndDelete({_id:taskID});
      if(!task)
      {
-      return res.status(404).json({msg:`No Task with id: ${taskID}`})
+        return next(createCustomError(`No Task with id: ${taskID}`,404))
     }
      res.status(200).json({task})
   
@@ -46,7 +46,7 @@ const editTasks = asyncwrapper (async (req,res) => {
     })
     if(!task)
     {
-        return res.status(404).json({msg:`No Task Exists By The ID:${taskID}`})
+        return next(createCustomError(`No Task with id: ${taskID}`,404))
     }
     res.status(200).json({task})
 
